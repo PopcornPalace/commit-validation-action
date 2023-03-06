@@ -1,4 +1,4 @@
-Copyright (c) 2022-2023 Double Good Technologies, LP. All rights reserved.
+Copyright (c) 2023 Double Good Technologies, LP. All rights reserved.
 
 This Proprietary Software License Agreement (“Agreement”) is made between
  Double Good Technologies, LP (“Licensor”), and internal/external software developers of the company (“Licensee”).
