@@ -70,9 +70,11 @@ function getPgpKeyId() {
         const match = pattern.exec(output);
         if (!match) {
             core.setFailed('Commit is not signed');
+            yield core.summary.addHeading(`❌ Commit is not signed`).write();
         }
         else if (match[1] !== 'RSA') {
             core.setFailed('You should use an RSA key');
+            yield core.summary.addHeading(`❌ You should use an RSA key`).write();
         }
         if ((match === null || match === void 0 ? void 0 : match[2]) !== null)
             return match[2];
@@ -112,8 +114,10 @@ function validateCommit() {
             const hash2 = crypto.createHash('sha1').update(keyValidation).digest('hex');
             if (hash1 !== hash2) {
                 core.setFailed(`Commit is not validated by ${KEYS_SERVER_URL}`);
+                yield core.summary.addHeading(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write();
             }
             core.setOutput('commit', 'Your commit is valid');
+            yield core.summary.addHeading("Your commit is valid ✅").write();
         }
         catch (error) {
             core.setFailed("error: " + error);
