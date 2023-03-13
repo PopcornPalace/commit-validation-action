@@ -1,0 +1,19 @@
+name: Test Action
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  check-dependencies:
+    runs-on: ubuntu-latest
+    name: Check dependencies
+    steps:
+      - uses: AppThreat/dep-scan-action@master
+        env:
+          VDB_HOME: ${{ github.workspace }}/db
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: reports
+          path: reports
