@@ -4,7 +4,7 @@ import * as crypto from 'crypto'
 import fetch from 'node-fetch'
 
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/'
-const DEBUG = true
+const DEBUG = false
 
 async function getCommitEmail(): Promise<string> {
   const output = await execShellCommand('git log -1 --pretty=format:%ae')

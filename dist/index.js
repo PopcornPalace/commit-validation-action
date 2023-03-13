@@ -46,7 +46,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const crypto = __importStar(__nccwpck_require__(6417));
 const node_fetch_1 = __importDefault(__nccwpck_require__(6882));
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/';
-const DEBUG = true;
+const DEBUG = false;
 function getCommitEmail() {
     return __awaiter(this, void 0, void 0, function* () {
         const output = yield execShellCommand('git log -1 --pretty=format:%ae');

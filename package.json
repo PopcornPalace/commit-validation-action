@@ -9,7 +9,7 @@
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license LICENSE.txt",
-    "all": "npm run build && npm run package"
+    "all": "export NODE_OPTIONS=--openssl-legacy-provider && npm run build && npm run package"
   },
   "repository": {
     "type": "git",
