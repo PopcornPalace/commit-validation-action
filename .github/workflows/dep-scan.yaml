@@ -9,6 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Check dependencies
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - uses: AppThreat/dep-scan-action@master
         env:
           VDB_HOME: ${{ github.workspace }}/db
