@@ -37,6 +37,9 @@ jobs:
     steps:
       - name: DustiLock
         uses: checkmarx/dustilock@v1.2.0
+        with:
+          recursive: true
+          audit: true
 
   check-validation:
     runs-on: ubuntu-latest
