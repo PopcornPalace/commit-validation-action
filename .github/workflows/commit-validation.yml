@@ -7,7 +7,9 @@ jobs:
     name: Check commit signing
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Check commit
         uses: PopcornPalace/commit-validation-action@main
         id: check-commit
