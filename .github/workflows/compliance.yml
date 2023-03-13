@@ -31,3 +31,23 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.gitleaks.outputs.report }}
+
+  dustilock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DustiLock
+        uses: checkmarx/dustilock@v1.2.0
+
+  check-validation:
+    runs-on: ubuntu-latest
+    name: Check commit signing
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check commit
+        uses: PopcornPalace/commit-validation-action@main
+        id: check-commit
+      - name: Show check-commit
+        run: echo "${{ steps.check-commit.outputs.commit }}"
