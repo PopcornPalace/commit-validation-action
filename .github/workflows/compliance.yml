@@ -35,6 +35,10 @@ jobs:
   dustilock:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
       - name: DustiLock
         uses: checkmarx/dustilock@v1.2.0
         with:
@@ -48,7 +52,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - name: Check commit
         uses: PopcornPalace/commit-validation-action@main
         id: check-commit
@@ -60,5 +64,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - uses: PopcornPalace/compliance-action@main
