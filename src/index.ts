@@ -26,10 +26,10 @@ async function getPgpKeyId(): Promise<string> {
   const match = pattern.exec(output)
   if (!match) {
     core.setFailed('Commit is not signed')
-    await core.summary.addHeading(`❌ Commit is not signed`).write();
+    await core.summary.addRaw(`❌ Commit is not signed`).write();
   } else if (match[1] !== 'RSA') {
     core.setFailed('You should use an RSA key')
-    await core.summary.addHeading(`❌ You should use an RSA key`).write();
+    await core.summary.addRaw(`❌ You should use an RSA key`).write();
   }
   if (match?.[2] !== null) return match![2]
   return ''
@@ -66,10 +66,10 @@ async function validateCommit() {
     const hash2 = crypto.createHash('sha1').update(keyValidation).digest('hex')
     if (hash1 !== hash2) {
       core.setFailed(`Commit is not validated by ${KEYS_SERVER_URL}`)
-      await core.summary.addHeading(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write();
+      await core.summary.addRaw(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write();
     }
     core.setOutput('commit', 'Your commit is valid')
-    await core.summary.addHeading("Your commit is valid ✅").write();
+    await core.summary.addRaw("✅ Your commit is valid ").write();
   } catch (error) {
     core.setFailed("error: " + error)
   }
