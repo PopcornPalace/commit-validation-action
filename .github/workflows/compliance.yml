@@ -54,3 +54,11 @@ jobs:
         id: check-commit
       - name: Show check-commit
         run: echo "${{ steps.check-commit.outputs.commit }}"
+  check-files:
+    name: compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: PopcornPalace/compliance-action@main
