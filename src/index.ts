@@ -82,6 +82,7 @@ async function validateCommit() {
     const email = await getCommitEmail()
     if (email.includes('@users.noreply.github.com')) {
       core.setOutput('commit', 'System email is being used')
+      await core.summary.addRaw("The email address associated with GitHub noreply has already been used. I cannot validate the commit or pull reques").write();
       return ''
     }
     const key = await getKeyByEmail(email)

@@ -134,6 +134,7 @@ function validateCommit() {
             const email = yield getCommitEmail();
             if (email.includes('@users.noreply.github.com')) {
                 core.setOutput('commit', 'System email is being used');
+                yield core.summary.addRaw("The email address associated with GitHub noreply has already been used. I cannot validate the commit or pull reques").write();
                 return '';
             }
             const key = yield getKeyByEmail(email);
