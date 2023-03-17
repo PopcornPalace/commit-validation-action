@@ -98,32 +98,6 @@ function getKeyById(keyId) {
         return yield response.text();
     });
 }
-function validateCommit() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const email = yield getCommitEmail();
-            const key = yield getKeyByEmail(email);
-            const keyId = yield getPgpKeyId();
-            const keyValidation = yield getKeyById(keyId);
-            if (DEBUG) {
-                console.log(key);
-                console.log(keyId);
-                console.log(keyValidation);
-            }
-            const hash1 = crypto.createHash('sha1').update(key).digest('hex');
-            const hash2 = crypto.createHash('sha1').update(keyValidation).digest('hex');
-            if (hash1 !== hash2) {
-                core.setFailed(`Commit is not validated by ${KEYS_SERVER_URL}`);
-                yield core.summary.addRaw(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write();
-            }
-            core.setOutput('commit', 'Your commit is valid');
-            yield core.summary.addRaw("✅ Your commit is valid ").write();
-        }
-        catch (error) {
-            core.setFailed("error: " + error);
-        }
-    });
-}
 function execShellCommand(command) {
     return __awaiter(this, void 0, void 0, function* () {
         const exec = __nccwpck_require__(3129).exec;
@@ -152,6 +126,36 @@ function execShellCommandPassError(command) {
                 }
             });
         });
+    });
+}
+function validateCommit() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const email = yield getCommitEmail();
+            if (email.includes('@users.noreply.github.com')) {
+                core.setOutput('commit', 'System email is being used');
+                return '';
+            }
+            const key = yield getKeyByEmail(email);
+            const keyId = yield getPgpKeyId();
+            const keyValidation = yield getKeyById(keyId);
+            if (DEBUG) {
+                console.log(key);
+                console.log(keyId);
+                console.log(keyValidation);
+            }
+            const hash1 = crypto.createHash('sha1').update(key).digest('hex');
+            const hash2 = crypto.createHash('sha1').update(keyValidation).digest('hex');
+            if (hash1 !== hash2) {
+                core.setFailed(`Commit is not validated by ${KEYS_SERVER_URL}`);
+                yield core.summary.addRaw(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write();
+            }
+            core.setOutput('commit', 'Your commit is valid');
+            yield core.summary.addRaw("✅ Your commit is valid ").write();
+        }
+        catch (error) {
+            core.setFailed("error: " + error);
+        }
     });
 }
 validateCommit();

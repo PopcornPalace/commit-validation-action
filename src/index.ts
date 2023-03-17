@@ -51,31 +51,6 @@ async function getKeyById(keyId: string): Promise<string> {
   return await response.text()
 }
 
-async function validateCommit() {
-  try {
-    const email = await getCommitEmail()
-    const key = await getKeyByEmail(email)
-    const keyId = await getPgpKeyId()
-    const keyValidation = await getKeyById(keyId)
-    if (DEBUG) {
-      console.log(key)
-      console.log(keyId)
-      console.log(keyValidation)
-    }
-    const hash1 = crypto.createHash('sha1').update(key).digest('hex')
-    const hash2 = crypto.createHash('sha1').update(keyValidation).digest('hex')
-    if (hash1 !== hash2) {
-      core.setFailed(`Commit is not validated by ${KEYS_SERVER_URL}`)
-      await core.summary.addRaw(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write();
-    }
-    core.setOutput('commit', 'Your commit is valid')
-    await core.summary.addRaw("✅ Your commit is valid ").write();
-  } catch (error) {
-    core.setFailed("error: " + error)
-  }
-
-}
-
 async function execShellCommand(command: string): Promise<string> {
   const exec = require('child_process').exec
   return new Promise<string>((resolve, reject) => {
@@ -102,6 +77,33 @@ async function execShellCommandPassError(command: string): Promise<string> {
   })
 }
 
+async function validateCommit() {
+  try {
+    const email = await getCommitEmail()
+    if (email.includes('@users.noreply.github.com')) {
+      core.setOutput('commit', 'System email is being used')
+      return ''
+    }
+    const key = await getKeyByEmail(email)
+    const keyId = await getPgpKeyId()
+    const keyValidation = await getKeyById(keyId)
+    if (DEBUG) {
+      console.log(key)
+      console.log(keyId)
+      console.log(keyValidation)
+    }
+    const hash1 = crypto.createHash('sha1').update(key).digest('hex')
+    const hash2 = crypto.createHash('sha1').update(keyValidation).digest('hex')
+    if (hash1 !== hash2) {
+      core.setFailed(`Commit is not validated by ${KEYS_SERVER_URL}`)
+      await core.summary.addRaw(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write();
+    }
+    core.setOutput('commit', 'Your commit is valid')
+    await core.summary.addRaw("✅ Your commit is valid ").write();
+  } catch (error) {
+    core.setFailed("error: " + error)
+  }
 
+}
 
 validateCommit()
