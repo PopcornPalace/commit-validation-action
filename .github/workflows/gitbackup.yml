@@ -10,8 +10,13 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check commit
+        uses: PopcornPalace/commit-validation-action@main
+        id: check-commit
+
       - uses: PopcornPalace/git-mirroring-action@main
         with:
           target_repo_url: ${{ secrets.CODECOMMIT_TARGET_REPO }}
           ssh_private_key: ${{ secrets.CODECOMMIT_SSH_PRIVATE_KEY }}
           ssh_username: ${{ secrets.CODECOMMIT_SSH_PRIVATE_KEY_ID }}
+      
