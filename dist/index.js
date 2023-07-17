@@ -129,32 +129,29 @@ function execShellCommandPassError(command) {
         });
     });
 }
-function getConfig(file_path) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const jsonString = fs.readFileSync(file_path, 'utf-8');
-            const jsonData = JSON.parse(jsonString);
-            console.log(jsonData);
-        }
-        catch (err) {
-            console.error(err);
-        }
-    });
-}
 function validateCommit() {
     return __awaiter(this, void 0, void 0, function* () {
         const dir = fs.realpathSync(process.cwd());
         const isUseConfig = core.getInput('use_config');
         const configFile = core.getInput('config_file');
-        if (isUseConfig === "true") {
-            yield getConfig(configFile);
-        }
         try {
             const email = yield getCommitEmail();
             if (email.includes('@users.noreply.github.com')) {
                 core.setOutput('commit', 'System email is being used');
                 yield core.summary.addRaw("The email address associated with GitHub noreply has already been used. I cannot validate the commit or pull reques").write();
-                return '';
+                return;
+            }
+            if (isUseConfig === "true") {
+                const jsonString = fs.readFileSync(configFile, 'utf-8');
+                let jsonData = JSON.parse(jsonString);
+                if (DEBUG) {
+                    console.log(jsonData);
+                }
+                if (jsonData.users.allow_without_validation.includes(email) === true) {
+                    core.setOutput('commit', 'Your commit is valid');
+                    yield core.summary.addRaw("✅ Your commit is valid ").write();
+                    return;
+                }
             }
             const key = yield getKeyByEmail(email);
             const keyId = yield getPgpKeyId();

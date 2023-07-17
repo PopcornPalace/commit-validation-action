@@ -7,6 +7,13 @@ import * as fs from 'fs'
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/'
 const DEBUG = false
 
+interface ConfigUser {
+  allow_without_validation: string
+}
+interface Config {
+users: ConfigUser
+}
+
 async function getCommitEmail(): Promise<string> {
   const output = await execShellCommand('git log -1 --pretty=format:%ae')
   return output.trim()
@@ -78,32 +85,33 @@ async function execShellCommandPassError(command: string): Promise<string> {
   })
 }
 
-
-async function getConfig(file_path:string) {  
-  try {
-    const jsonString = fs.readFileSync(file_path, 'utf-8');
-    const jsonData = JSON.parse(jsonString);
-    console.log(jsonData);
-  } catch (err) {
-    console.error(err);
-  }
-}
-
 async function validateCommit() {
   const dir = fs.realpathSync(process.cwd());
   const isUseConfig: string = core.getInput('use_config')
   const configFile: string = core.getInput('config_file')
-  if (isUseConfig === "true") {
-    await getConfig(configFile)
-  }
   
+
   try {
     const email = await getCommitEmail()
     if (email.includes('@users.noreply.github.com')) {
       core.setOutput('commit', 'System email is being used')
       await core.summary.addRaw("The email address associated with GitHub noreply has already been used. I cannot validate the commit or pull reques").write();
-      return ''
+      return 
     }
+
+    if (isUseConfig === "true") {
+        const jsonString = fs.readFileSync(configFile, 'utf-8');
+        let jsonData: Config = JSON.parse(jsonString);
+        if (DEBUG){
+          console.log(jsonData)
+        }
+        if(jsonData.users.allow_without_validation.includes(email) === true) {
+          core.setOutput('commit', 'Your commit is valid')
+          await core.summary.addRaw("✅ Your commit is valid ").write();
+          return
+        }
+    }
+
     const key = await getKeyByEmail(email)
     const keyId = await getPgpKeyId()
     const keyValidation = await getKeyById(keyId)
@@ -112,6 +120,7 @@ async function validateCommit() {
       console.log(keyId)
       console.log(keyValidation)
     }
+
     const hash1 = crypto.createHash('sha1').update(key).digest('hex')
     const hash2 = crypto.createHash('sha1').update(keyValidation).digest('hex')
     if (hash1 !== hash2) {
