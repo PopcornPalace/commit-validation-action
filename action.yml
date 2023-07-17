@@ -6,6 +6,14 @@ inputs:
     description: 'Whether to enable debug logging'
     required: false
     default: 'true'
+  use_config:
+    description: 'use config file'
+    required: false
+    default: 'false'
+  config_file:
+    description: 'path and name config file'
+    required: false
+    default: '.commit_validation.json'
 runs:
   using: 'node16'
   main: 'dist/index.js'

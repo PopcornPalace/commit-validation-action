@@ -45,6 +45,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const crypto = __importStar(__nccwpck_require__(6417));
 const node_fetch_1 = __importDefault(__nccwpck_require__(6882));
+const fs = __importStar(__nccwpck_require__(5747));
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/';
 const DEBUG = false;
 function getCommitEmail() {
@@ -128,8 +129,26 @@ function execShellCommandPassError(command) {
         });
     });
 }
+function getConfig(file_path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const jsonString = fs.readFileSync(file_path, 'utf-8');
+            const jsonData = JSON.parse(jsonString);
+            console.log(jsonData);
+        }
+        catch (err) {
+            console.error(err);
+        }
+    });
+}
 function validateCommit() {
     return __awaiter(this, void 0, void 0, function* () {
+        const dir = fs.realpathSync(process.cwd());
+        const isUseConfig = core.getInput('use_config');
+        const configFile = core.getInput('config_file');
+        if (isUseConfig === "true") {
+            yield getConfig(configFile);
+        }
         try {
             const email = yield getCommitEmail();
             if (email.includes('@users.noreply.github.com')) {

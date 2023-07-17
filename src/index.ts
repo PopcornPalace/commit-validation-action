@@ -2,6 +2,7 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as crypto from 'crypto'
 import fetch from 'node-fetch'
+import * as fs from 'fs'
 
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/'
 const DEBUG = false
@@ -77,7 +78,25 @@ async function execShellCommandPassError(command: string): Promise<string> {
   })
 }
 
+
+async function getConfig(file_path:string) {  
+  try {
+    const jsonString = fs.readFileSync(file_path, 'utf-8');
+    const jsonData = JSON.parse(jsonString);
+    console.log(jsonData);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 async function validateCommit() {
+  const dir = fs.realpathSync(process.cwd());
+  const isUseConfig: string = core.getInput('use_config')
+  const configFile: string = core.getInput('config_file')
+  if (isUseConfig === "true") {
+    await getConfig(configFile)
+  }
+  
   try {
     const email = await getCommitEmail()
     if (email.includes('@users.noreply.github.com')) {
@@ -106,5 +125,6 @@ async function validateCommit() {
   }
 
 }
+
 
 validateCommit()
