@@ -1,10 +1,8 @@
 {
-    "except_users": [
-        "one",
-        "two"
-    ],
-    "only_users": [
-        "one",
-        "two"
-    ]
+    "users": {
+        "allow_without_validation": [
+            "one@one.com",
+            "two@one.com"
+        ]
+    }
 }
