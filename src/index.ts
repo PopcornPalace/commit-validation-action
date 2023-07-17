@@ -107,7 +107,7 @@ async function validateCommit() {
         }
         if(jsonData.users.allow_without_validation.includes(email) === true) {
           core.setOutput('commit', 'Your commit is valid')
-          await core.summary.addRaw("✅ Your commit is valid ").write();
+          await core.summary.addRaw("✅ Your commit is trust for us ").write();
           return
         }
     }

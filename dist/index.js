@@ -149,7 +149,7 @@ function validateCommit() {
                 }
                 if (jsonData.users.allow_without_validation.includes(email) === true) {
                     core.setOutput('commit', 'Your commit is valid');
-                    yield core.summary.addRaw("✅ Your commit is valid ").write();
+                    yield core.summary.addRaw("✅ Your commit is trust for us ").write();
                     return;
                 }
             }
