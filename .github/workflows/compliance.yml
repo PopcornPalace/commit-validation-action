@@ -56,6 +56,8 @@ jobs:
       - name: Check commit
         uses: PopcornPalace/commit-validation-action@main
         id: check-commit
+        with:
+          use_config: true
       - name: Show check-commit
         run: echo "${{ steps.check-commit.outputs.commit }}"
   check-files:
