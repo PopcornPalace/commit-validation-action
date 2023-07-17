@@ -1,0 +1,10 @@
+{
+    "except_users": [
+        "one",
+        "two"
+    ],
+    "only_users": [
+        "one",
+        "two"
+    ]
+}
