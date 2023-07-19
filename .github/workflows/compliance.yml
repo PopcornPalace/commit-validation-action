@@ -68,11 +68,4 @@ jobs:
         with:
           fetch-depth: 1
       - uses: PopcornPalace/compliance-action@main
-      - name: Fetch Dependabot metadata
-        id: dependabot-metadata
-        uses: dependabot/fetch-metadata@v1
-        with:
-          alert-lookup: true
-          compat-lookup: true
-          skip-commit-verification: true
-          skip-verification: true
+ 
