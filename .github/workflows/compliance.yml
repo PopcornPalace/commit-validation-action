@@ -74,3 +74,4 @@ jobs:
         with:
           alert-lookup: true
           compat-lookup: true
+          skip-commit-verification: true
