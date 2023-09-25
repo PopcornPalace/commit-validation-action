@@ -107,6 +107,9 @@ function validateCommit() {
             const gitSignatureCommand = 'git log -n 1 --show-signature --format="%h %G?"';
             const res = yield execShellCommandPassError(gitSignatureCommand);
             const output = res.trim();
+            if (DEBUG) {
+                console.log(output);
+            }
             if (output.endsWith('G')) {
                 core.setOutput('commit', 'Your commit is valid');
                 yield core.summary.addRaw("✅ Your commit is valid ").write();
