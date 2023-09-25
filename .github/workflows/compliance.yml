@@ -3,8 +3,7 @@ name: compliance
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-
- check_signature:
+  check_signature:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
