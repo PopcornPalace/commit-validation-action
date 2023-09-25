@@ -30,6 +30,10 @@ async function getKeyByEmail(email: string): Promise<string> {
 
 async function getPgpKeyId(): Promise<string> {
   const output = await execShellCommandPassError('git verify-commit HEAD')
+  if(DEBUG) {
+    console.log("git verify-commit HEAD")
+    console.log(output)
+  }
   const pattern = /using (\w+) key (\w+)/
   const match = pattern.exec(output)
   if (!match) {
