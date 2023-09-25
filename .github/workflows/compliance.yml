@@ -3,6 +3,23 @@ name: compliance
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
+
+ check_signature:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Check Commit Signature
+      run: |
+        git log -n 1 --show-signature --format="%h %G?" > commit_signature.txt
+        if [[ $(tail -n 1 commit_signature.txt) == *"G"* ]]; then
+          echo "Last commit is signed."
+        else
+          echo "Last commit is not signed or the signature is not valid."
+          exit 1
+        fi
+
   gitleaks:
     runs-on: ubuntu-latest
     steps:
