@@ -47,7 +47,7 @@ const crypto = __importStar(__nccwpck_require__(6417));
 const node_fetch_1 = __importDefault(__nccwpck_require__(6882));
 const fs = __importStar(__nccwpck_require__(5747));
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/';
-const DEBUG = false;
+var DEBUG = true;
 function getCommitEmail() {
     return __awaiter(this, void 0, void 0, function* () {
         const output = yield execShellCommand('git log -1 --pretty=format:%ae');
@@ -134,6 +134,7 @@ function validateCommit() {
         const dir = fs.realpathSync(process.cwd());
         const isUseConfig = core.getInput('use_config');
         const configFile = core.getInput('config_file');
+        //DEBUG = core.getBooleanInput('debug')
         try {
             const email = yield getCommitEmail();
             if (email.includes('@users.noreply.github.com')) {

@@ -5,7 +5,7 @@ import fetch from 'node-fetch'
 import * as fs from 'fs'
 
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/'
-const DEBUG = false
+var DEBUG = true
 
 interface ConfigUser {
   allow_without_validation: string
@@ -89,7 +89,7 @@ async function validateCommit() {
   const dir = fs.realpathSync(process.cwd());
   const isUseConfig: string = core.getInput('use_config')
   const configFile: string = core.getInput('config_file')
-  
+  //DEBUG = core.getBooleanInput('debug')
 
   try {
     const email = await getCommitEmail()
