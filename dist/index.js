@@ -66,9 +66,14 @@ function getKeyByEmail(email) {
 }
 function getPgpKeyId() {
     return __awaiter(this, void 0, void 0, function* () {
-        const output = yield execShellCommandPassError('git verify-commit HEAD');
+        const commit = yield execShellCommandPassError("git log -1 --format='%H'");
+        const getCommitCommand = 'git verify-commit ' + commit;
         if (DEBUG) {
-            console.log("git verify-commit HEAD");
+            console.log(getCommitCommand);
+        }
+        const output = yield execShellCommandPassError(getCommitCommand);
+        if (DEBUG) {
+            console.log("git verify-commit");
             console.log(output);
         }
         const pattern = /using (\w+) key (\w+)/;
