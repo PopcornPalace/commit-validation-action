@@ -72,15 +72,18 @@ async function validateCommit() {
         }
     }
 
-    const gitSignatureCommand = 'git log -n 1 --show-signature --format="%h %G?"';
+    const gitSignatureCommand = 'git log -n 1 --show-signature --format="%h %G?"'
     const res = await execShellCommandPassError(gitSignatureCommand)
-    const output = res.trim();
+    const output = res.trim()
+    if(DEBUG) {
+      console.log(output)
+    }
     if (output.endsWith('G')) {
       core.setOutput('commit', 'Your commit is valid')
-      await core.summary.addRaw("✅ Your commit is valid ").write();
+      await core.summary.addRaw("✅ Your commit is valid ").write()
     } else {
       core.setFailed('Commit is not signed or not valid')
-      await core.summary.addRaw(`❌ Commit is not signed or not valid`).write();
+      await core.summary.addRaw(`❌ Commit is not signed or not valid`).write()
     }
   } catch (error) {
     core.setFailed("error: " + error)
