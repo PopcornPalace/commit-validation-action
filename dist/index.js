@@ -48,6 +48,7 @@ const node_fetch_1 = __importDefault(__nccwpck_require__(6882));
 const fs = __importStar(__nccwpck_require__(5747));
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/';
 const DEBUG = false;
+const GITHUB_KEY = "4AEE18F83AFDEB23";
 function getCommitEmail() {
     return __awaiter(this, void 0, void 0, function* () {
         const output = yield execShellCommand('git log -1 --pretty=format:%ae');
@@ -155,6 +156,11 @@ function validateCommit() {
             }
             const key = yield getKeyByEmail(email);
             const keyId = yield getPgpKeyId();
+            if (keyId === GITHUB_KEY) {
+                core.setOutput('commit', 'Your commit is valid');
+                yield core.summary.addRaw("✅ Your commit is valid ").write();
+                return;
+            }
             const keyValidation = yield getKeyById(keyId);
             if (DEBUG) {
                 console.log(key);

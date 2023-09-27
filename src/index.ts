@@ -6,6 +6,7 @@ import * as fs from 'fs'
 
 const KEYS_SERVER_URL = 'https://keys.openpgp.org/'
 const DEBUG = false
+const GITHUB_KEY = "4AEE18F83AFDEB23"
 
 interface ConfigUser {
   allow_without_validation: string
@@ -114,6 +115,11 @@ async function validateCommit() {
 
     const key = await getKeyByEmail(email)
     const keyId = await getPgpKeyId()
+    if(keyId === GITHUB_KEY) {
+      core.setOutput('commit', 'Your commit is valid')
+      await core.summary.addRaw("✅ Your commit is valid ").write()
+      return
+    }
     const keyValidation = await getKeyById(keyId)
     if (DEBUG) {
       console.log(key)
@@ -125,10 +131,10 @@ async function validateCommit() {
     const hash2 = crypto.createHash('sha1').update(keyValidation).digest('hex')
     if (hash1 !== hash2) {
       core.setFailed(`Commit is not validated by ${KEYS_SERVER_URL}`)
-      await core.summary.addRaw(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write();
+      await core.summary.addRaw(`❌ Commit is not validated by ${KEYS_SERVER_URL}`).write()
     }
     core.setOutput('commit', 'Your commit is valid')
-    await core.summary.addRaw("✅ Your commit is valid ").write();
+    await core.summary.addRaw("✅ Your commit is valid ").write()
   } catch (error) {
     core.setFailed("error: " + error)
   }
