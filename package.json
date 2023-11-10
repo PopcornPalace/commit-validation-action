@@ -27,7 +27,7 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
-    "axios": "^0.24.0",
+    "axios": "^1.6.0",
     "http": "^0.0.1-security",
     "node-fetch": "^3.3.0",
     "node-http": "^0.0.5",
